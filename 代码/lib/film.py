@@ -1174,5 +1174,55 @@ def music_trial():
     print(f'配乐试听 {len(y) / sr:.0f}s -> {out}/配乐试听.wav；选定后写进 music/选用.txt，再跑 ./make.sh mix')
 
 
+def load_events(path=None):
+    """build/events.json (./make.sh events: the film's EV.build() list, lib/events.js). Refuses a list exported from another
+    timeline: re-voicing or a script change moves every word, and the sound would land where the old picture was."""
+    p = path or os.path.join(BUILD, 'events.json')
+    if not os.path.exists(p):
+        sys.exit('build/events.json 不在：先跑 ./make.sh events（render.js 里用 EV.build 定下事件表）')
+    ev = json.load(open(p, encoding='utf-8'))
+    sha = hashlib.sha256(open(os.path.join(ROOT, 'timeline.json'), 'rb').read()).hexdigest()
+    if ev.get('meta', {}).get('timeline_sha256') != sha:
+        sys.exit('build/events.json 是旧时间轴导出的（时间轴改过）：重跑 ./make.sh events 再混音')
+    return ev['events']
+
+
+def attack_offset(clip, frac=0.3):
+    """Seconds from a sample's start to its attack (the first 1 ms step where a 5 ms RMS envelope reaches frac of its peak):
+    a whoosh that swells for 0.3 s placed at t is heard 0.3 s late."""
+    x = np.abs(clip).mean(0) if clip.ndim == 2 else np.abs(clip)
+    win, hop = max(1, int(.005 * SR)), max(1, int(.001 * SR))
+    env = np.sqrt(np.convolve(x ** 2, np.ones(win) / win, 'same')[::hop])
+    if not len(env) or env.max() <= 0:
+        return 0.0
+    return float(np.argmax(env >= frac * env.max()) * hop / SR)
+
+
+def fx_from_events(buf, sfx=None, events=None):
+    """Every event with an 'sfx' placed in buf (shaped like the mix) at its time minus the sample's attack offset, at its
+    gain. sfx: {name: fn} to look the names up in (default: the functions of sound.py and the film's script.py). Returns the
+    events placed, for the film's own bookkeeping (方法/声音.md「声音上的贴」)."""
+    events = load_events() if events is None else events
+    look, cache, placed = sfx or globals(), {}, []
+    for e in events:
+        name = e.get('sfx')
+        if not name:
+            continue
+        if not callable(look.get(name)):
+            sys.exit(f"事件 {e.get('id')} 的音效 {name} 在 sound.py / script.py 里没有")
+        key = (name, json.dumps(e.get('args', {}), sort_keys=True))
+        if key not in cache:
+            clip = np.asarray(look[name](**e.get('args', {})), dtype=np.float64)
+            cache[key] = (clip, attack_offset(clip))
+        clip, pre = cache[key]
+        if e.get('pan'):
+            c = clip if clip.ndim == 2 else np.stack([clip, clip])
+            p_ = float(e['pan']); clip = c * np.array([[min(1, 1 - p_)], [min(1, 1 + p_)]])
+        add(buf, clip, e['t'] - pre, e.get('gain', 0.5))
+        placed.append(e)
+    print(f'事件音效 {len(placed)} 个（按起音对齐：放在 t 减去样本自己的起音偏移）')
+    return placed
+
+
 def main():
     {'tts': tts, 'mix': mix, 'export': export, 'hash': lambda: print(script_hash()), 'sheet': review_sheet, 'gate': gate, 'qctimes': qc_times, 'listen': listen, 'loudness': qc_loudness, 'try': trial, 'musictry': music_trial, 'mixlu': mix_lu, 'subcheck': subskip_check}[sys.argv[1]]()

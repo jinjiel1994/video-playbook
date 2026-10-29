@@ -8,6 +8,8 @@
 //                                                     every transition (a scene fading in is drawn at a negative local time), the
 //                                                     first frames of every scene, every line and the film, one frame a second, the last frames
 // node ../../lib/capture.mjs endline '完整版 · 在视频号' out.png   -> the teaser's last line, in the film's type (lib/teaser.py)
+// node ../../lib/capture.mjs events               -> build/events.json: the film's EV.build() list (lib/events.js) with the
+//                                                     timeline's sha256, so script.py mix() can refuse a stale one
 // node ../../lib/capture.mjs render [workers]      -> build/seg_<k>.mp4 (10 s each) + build/segs.txt + build/segs.json (END=<s>: only the start)
 // node ../../lib/capture.mjs render [workers] 95.5-101,300
 //                                                  -> only the segments holding those times again (a time, or a span from-to, in
@@ -15,6 +17,7 @@
 import { createRequire } from 'module';
 import { spawn } from 'child_process';
 import fs from 'fs';
+import crypto from 'crypto';
 import path from 'path';
 import { pathToFileURL } from 'url';
 const require = createRequire(import.meta.url);
@@ -77,6 +80,18 @@ async function endLine(text, out) {
 // the film is rendered in segments of CHUNK frames, handed out to the workers one at a time; build/segs.json keeps the plan,
 // so a later render can redo only the segments a fix touched (大理: the first full render ran 20 minutes and died on one frame)
 const CHUNK = Math.round(Number(process.env.CHUNK || 10) * FPS);
+// the event list the film's render.js built (lib/events.js EV.build), for the mix and lib/qcsync.py. A film without events
+// writes an empty list, so the step is harmless anywhere.
+async function exportEvents() {
+  const browser = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
+  const page = await openPage(browser);
+  const events = await page.evaluate(() => window.EVENTS || []);
+  await browser.close();
+  const sha = crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, 'timeline.json'))).digest('hex');
+  fs.writeFileSync(path.join(BUILD, 'events.json'), JSON.stringify({ meta: { fps: FPS, width: 1080, height: 1920, duration: TL.duration, timeline_sha256: sha }, events }, null, 1));
+  console.log(`events ${events.length} 个 → build/events.json` + (events.length ? `（${events.filter(e => e.sfx).length} 个带音效，${events.filter(e => e.vis && e.vis.probe).length} 个带画面探测框）` : '（这条片子没有 EV.build，空表）'));
+}
+
 async function renderSegs(N, total, ks) {
   const queue = [...ks];
   const one = async (w) => {
@@ -259,6 +274,7 @@ else if (mode === 'dense') {
 }
 else if (mode === 'crash') await crashScan();
 else if (mode === 'endline') await endLine(arg, process.argv[4]);
+else if (mode === 'events') await exportEvents();
 else {
   const N = Number(arg || 5), only = process.argv[4];
   const total = Math.ceil(Math.min(TL.duration, Number(process.env.END || TL.duration)) * FPS);   // END=<seconds>: render only the start (a preview)

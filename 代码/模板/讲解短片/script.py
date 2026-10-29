@@ -32,6 +32,9 @@ SCENES = [
 # 配乐按章分段的，不用自己写 mix()：设 MUSIC_SEAMS = 'chapters'，lib 的默认混音把接缝放进每次换章的转场（DUCK、DIPS、CARD_LIFT
 # 这几样也能调，说明在 lib/film.py，例子是 videos/2026-10-单片-运动-竖屏/script.py）
 # 有了自己的音效、要按句子分段配乐时，在这里写 def mix():（照 videos/2026-10-追本-多问一层-竖屏/script.py 的 mix），lib 的默认混音就让开
+# 待接（TODO）：render.js 用了 EV.build 的片子，音效不手写时间，从 build/events.json 放（./make.sh events 导出，时间轴改过会拒绝）：
+#   在自己的 mix() 里铺好配乐和人声之后加一行 fx_from_events(buf)
+#   事件的 sfx 是 lib/sound.py 或本文件里的函数名（wood_tap、thud…），args 是它的参数；每个音效按自己的起音提前放，起音正落在事件时间上（lib/film.py）。混完跑 ./make.sh qcsync
 
 if __name__ == '__main__':
     main()

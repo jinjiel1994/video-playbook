@@ -24,6 +24,8 @@
 #   ./make.sh render [进程数] [时间]  逐帧渲染（默认 8 个进程），每 10 秒一段。带时间（12.5,95-101）只重渲这些时间所在的段，再拼回去
 #   ./make.sh music               Lyria 3.5 生成配乐候选（music/make_music.py 里的提示词，已有的跳过），再用 HDemucs 查每首混没混进人声；选中的那套写进 music/选用.txt
 #   ./make.sh cover               出封面候选（cover.js）→ build/cover_<n>.png，选中的复制成 cover.png
+#   ./make.sh events              render.js 用 EV.build 定下的事件表（lib/events.js）→ build/events.json，带时间轴的哈希；mix 里的
+#                                 fx_from_events 按它放音效，时间轴改过就不肯混（方法/声音.md「声音上的贴」）。没有事件的片子写一张空表
 #   ./make.sh mix                 配乐、音效、人声混音 → build/audio.wav
 #   ./make.sh mixcheck            混音后回读：每句从混好的音轨里再认一遍，比干声多错 2 个音节以上的列出来（配乐或音效盖住了人声）
 #   ./make.sh mux [文件名]        两遍响度标准化，合成成片放进 $OUT_DIR（默认 ~/Documents/notes）；超过 50 MB 自动接着跑 fit
@@ -31,8 +33,11 @@
 #   ./make.sh teaser [check]      预告片：照 预告.txt 按句从成片里剪（交叉淡化，最后一帧停住、配成片自己的结尾，一行引流字），
 #                                 30–60 秒，放进 $OUT_DIR（默认 ~/Documents/notes）。check 只排表、查切点
 #   ./make.sh qc [成片]           成片后第二道审的材料：check 的两样、手机尺寸联系表（每张 20 格）和格子索引、前后响度跳变、
-#                                 转场和首尾以外的黑屏和静音、混音后回读。都写进 build/qc_*.txt；另出四张原尺寸静帧看质感
-#   ./make.sh all                 export → voice → align → listen → timeline → check → dense → render → mix → mixcheck → mux
+#                                 转场和首尾以外的黑屏和静音、混音后回读。都写进 build/qc_*.txt；另出四张原尺寸静帧看质感。
+#                                 有 build/events.json 的再跑 qcsync
+#   ./make.sh qcsync [成片]       画面落没落在声音上：每个带探测框的事件，画面亮起的那一帧对声音开始的那一帧（lib/qcsync.py）。
+#                                 同一帧至少 90%、没有差过 ±1 帧的才算过；音效轨和成片里的起音只报不判
+#   ./make.sh all                 export → voice → align → listen → timeline → check → dense → render → events → mix → mixcheck → mux
 # 换声音：REF=/path/to/ref.wav ./make.sh voice
 ROOT=${HERE:h:h}; ENG=$ROOT/engines; LIB=$ROOT/lib
 REF=${REF:-$ROOT/voices/SSB0407/ref.wav}
@@ -97,6 +102,7 @@ step() {
               for t in $tracks; do grep -qF "$t " music/人声检查.txt 2>/dev/null || todo+=($t); done
               (( $#todo )) && $ENG/asr-venv/bin/python $ENG/vocal_check.py $todo | tee -a music/人声检查.txt ;;
     cover)    node $LIB/cover.mjs ;;                       # designed covers (cover.js) -> build/cover_<n>.png; copy the chosen one to cover.png
+    events)   node $LIB/capture.mjs events ;;
     mix)      python3 script.py mix ;;
     mixcheck) $ENG/asr-venv/bin/python $ENG/mix_readback.py 2>/dev/null ;;
     mux)      local m ii out
@@ -130,9 +136,11 @@ step() {
               python3 script.py loudness ${2:-} | tee build/qc_loudness.txt
               python3 $LIB/qc_av.py ${2:-} | tee build/qc_av.txt
               step mixcheck | tee build/qc_mix.txt
+              [[ -s build/events.json ]] && python3 $LIB/qcsync.py $qf | tee build/qc_sync.txt   # event-driven sound only
               print "成片体积 $(( $(stat -f %z $qf) / 1000000 )) MB（超过 49 MB 从对话里发不全，make.sh fit 压一下）" | tee build/qc_size.txt ;;
     teaser)   python3 $LIB/teaser.py ${2:-} ;;
-    all)      for s in export voice align listen timeline check dense render mix mixcheck mux; do print "== $s"; step $s || return 1; done ;;
+    qcsync)   python3 $LIB/qcsync.py ${2:-} ;;
+    all)      for s in export voice align listen timeline check dense render events mix mixcheck mux; do print "== $s"; step $s || return 1; done ;;
     *)        sed -n '1,/^ROOT=/p' $LIB/make.zsh | sed '$d'; return 1 ;;
   esac
 }

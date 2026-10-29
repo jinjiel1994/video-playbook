@@ -48,3 +48,13 @@ const SCENE_FN = {
     endCard(lt, sc);
   },
 };
+
+// 待接（TODO，不用就别动）：音效跟着画面里的东西、不挂在某个词上的片子（节拍、敲击、一下一下落下的东西），
+// 在这里用 lib/events.js 写一张事件表，画面和混音都读它（方法/声音.md「声音上的贴」）：
+//   EV.build(() => [ ...pattern('x..x..X.', 96, S[0].start + 2, 2, { lane: 'kick', sfx: 'wood_tap', vis: { probe: [440, 1100, 640, 1300], color: K.accent } }),
+//                    onWord(S[0], 'h1', '具体', 0, { lane: 'pop', sfx: 'thud', gain: .4 }) ]);
+//   命中画在声音开始的那一帧（场景里 t = sc.start + lt）：const e = EV.last(sc.start + lt, 'kick');
+//   if (e) circle(540, 1200, 80, K.accent, hitEnv(hitAge(sc.start + lt, e)));
+//   渐变从命中起算用 progHit()，不用 prog()（prog 会晚 0–1 帧）。出片前 ./make.sh events，混音用 script.py 里的 fx_from_events。
+// 一条贯穿全片的锚（播放头、指针、一个点，形式库/画法.md「一条贯穿的锚」）：写 function drawAnchor(t) {…}，
+// film.js 在场景和转场之后、字幕之前画它，换场不断。

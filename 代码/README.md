@@ -73,21 +73,23 @@ python3 script.py sheet && ENGINE=est python3 script.py tts && ./make.sh check
 | `分镜单.md` | 每一句话配什么画面、哪个词触发什么 |
 | `script.py` | 稿子切成场景和句子：`C('h1', '一句话', hl='要强调的词')`；`HOOK` 是开头那句 |
 | `render.js` | 每个场景一个函数，`renderFrame(t)` 按时间算出这一帧；`Q(sc).w('h1', '词')` 拿到那个词念到的时刻 |
-| `index.html` | 载入 `lib/film.js` 和 `render.js` 的页面 |
+| `index.html` | 载入 `lib/film.js`、`lib/events.js` 和 `render.js` 的页面 |
 | `片子.json` | 规格、平台、标题、音色这些默认值 |
 
 ## lib 里有什么
 
 | 文件 | 干什么 |
 |---|---|
-| `film.js` | 画面底座：文字、面板、小签、大标题、人、圆圈，缓动，按词取时间，检查登记 |
+| `film.js` | 画面底座：文字、面板、小签、大标题、人、圆圈，缓动，按词取时间，检查登记；片子可以给一条贯穿的锚（`drawAnchor(t)`） |
+| `events.js` | 事件表：画面和混音读同一张（`EV.build`、`pattern`、`onWord`），命中画在声音那一帧（`snapT`、`hitEnv`、`progHit`）；`make.sh events` 导出，`film.py` 的 `fx_from_events` 按它放音效（`../方法/声音.md`「声音上的贴」） |
 | `film.py` | 稿子 → 时间轴 → 字幕 → 门禁（开头、名句、稿子哈希）→ 混音 |
 | `sound.py` | 合成音效：垫底、铃、哔、呼的一声、落地、音符 |
-| `capture.mjs` | 起浏览器：崩溃扫描、静帧、检查、密查、逐帧渲染 |
+| `capture.mjs` | 起浏览器：崩溃扫描、静帧、检查、密查、逐帧渲染、导出事件表 |
 | `timecheck.mjs` | 时间上的检查：章节名停够没有、字停够读完没有、画面停太久 |
 | `make.zsh` | 每条片子 `./make.sh <命令>` 的全部命令，不带参数列出来 |
 | `wordcheck.py` | render.js 里按词触发的词还在不在稿子里 |
 | `qc*.py`、`sheet.py`、`qc_av.py` | 成片审的材料：手机尺寸联系表、响度跳变、黑屏静音 |
+| `qcsync.py` | 画声同步：成片里每个事件的画面亮起那一帧对声音开始那一帧，90% 同一帧、没有差过 ±1 帧才过（`make.sh qcsync`） |
 | `cover.mjs` | 出封面候选 |
 | `pixel.js`、`chibi.js`、`mocap.py` | 像素小人、Q 版小人、动作数据（mocap 要的 CMU 数据没带） |
 | `teaser.py` | 从成片剪预告（默认不做） |

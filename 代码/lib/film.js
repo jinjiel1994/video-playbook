@@ -6,7 +6,9 @@
 // renderFrame(t) and window.ready.
 // The film's render.js defines K (its palette) and SCENE_FN {scene id: fn(lt, sc)}; optionally HL/HLC (a highlighted
 // subtitle word takes the colour of what it means), TRANSITIONS {type: fn(k, t, p)} for its chapter transitions
-// ('dissolve' is built in) and finishDim(t) (how much of the vignette to keep, e.g. less over a bright end card).
+// ('dissolve' is built in), finishDim(t) (how much of the vignette to keep, e.g. less over a bright end card) and
+// drawAnchor(t) (a persistent anchor the content plays through, e.g. a timeline with a playhead: drawn after the scene or the
+// transition, so a dissolve never fades it; 形式库/画法.md「一条贯穿的锚」).
 // K keys read here, with defaults: ink, dim, edge, panel, lav, bg0, pillFill, tagResearch, tagReading, veil, chipFill,
 // subShade, subInk, subHl, vignette, phone.
 const W = 1080, H = 1920, CX = W / 2, CY = H / 2;
@@ -423,6 +425,7 @@ window.renderFrame = function (t) {
     if (a0 > 0) drawScene(k, t - S[k].start, a0);
     if (a1 > 0) drawScene(k + 1, t - S[k + 1].start, a1);
   }
+  if (typeof drawAnchor === 'function') drawAnchor(t);   // the film's persistent anchor, above scenes and transitions
   if (!tr) chapterTag(t);
   drawSubs(t);
   drawFinish(t);
