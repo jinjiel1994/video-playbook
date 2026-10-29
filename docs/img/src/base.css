@@ -1,0 +1,25 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1600px; height: 900px; }
+body { font-family: "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", sans-serif; background: #f5f5f7; color: #1d1d1f;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+body.dark { background: #0b0b0d; color: #f5f5f7; }
+h1 { font-size: 76px; font-weight: 700; letter-spacing: -1px; line-height: 1.2; text-align: center; }
+.sub { font-size: 40px; color: #6e6e73; margin-top: 22px; text-align: center; }
+.dark .sub { color: #a1a1a6; }
+.blue { color: #0071e3; } .dark .blue { color: #2997ff; }
+.row { display: flex; align-items: center; gap: 22px; margin-top: 70px; }
+.card { background: #fff; border-radius: 28px; padding: 30px 30px; min-width: 190px; text-align: center; box-shadow: 0 2px 20px rgba(0,0,0,.05); }
+.dark .card { background: #1c1c1e; box-shadow: none; }
+.card b { display: block; font-size: 40px; font-weight: 700; }
+.card i { display: block; font-style: normal; font-size: 24px; color: #6e6e73; margin-top: 10px; }
+.dark .card i { color: #a1a1a6; }
+.card.hi { background: #0071e3; color: #fff; } .card.hi i { color: rgba(255,255,255,.8); }
+.arrow { font-size: 40px; color: #c7c7cc; }
+code { font-family: "SF Mono", Menlo, monospace; }
+.steps { display: grid; grid-template-columns: repeat(3, 370px); column-gap: 64px; row-gap: 40px; margin-top: 60px; position: relative; }
+.steps .card { min-width: 0; padding: 30px 26px; position: relative; }
+.steps .card b { font-size: 54px; }
+.steps .card i { font-size: 34px; }
+.steps .card .no { position: absolute; left: 22px; top: 16px; font-size: 24px; font-weight: 700; color: #c7c7cc; }
+.steps .card.hi .no { color: rgba(255,255,255,.7); }
+.steps .card:not(:nth-child(3n))::after { content: "→"; position: absolute; right: -50px; top: 50%; transform: translateY(-50%); font-size: 40px; color: #c7c7cc; }

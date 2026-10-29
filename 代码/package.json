@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "description": "视频车间：逐帧渲染用的浏览器驱动",
+  "dependencies": { "playwright-core": "1.62.1" }
+}

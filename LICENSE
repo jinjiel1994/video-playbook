@@ -1,0 +1,30 @@
+本仓库分两种授权：
+
+- 文字（代码/ 以外的全部文件：方法/、形式库/、复盘/、规格/ 和根目录的 .md）：CC BY 4.0，全文见 LICENSE-docs。
+- 代码（代码/ 目录下的全部文件）：MIT License，全文如下。
+
+第三方的东西各有各的授权，不在上面两种之内：playwright-core（Apache-2.0，npm 安装，不在仓库里）；字体只写名字、不带文件（Noto Sans CJK SC、Noto Serif CJK SC 是 SIL OFL 1.1）；CMU 动作捕捉数据（代码/lib/mocap.py 处理用）不在仓库里，按 CMU 的条款使用，不能转卖。
+
+---
+
+MIT License
+
+Copyright (c) 2026 Jinjie Li
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

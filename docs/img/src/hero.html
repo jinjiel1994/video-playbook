@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.frames{display:flex;gap:36px;margin-top:80px}
+.f{width:200px;height:356px;background:#fff;border-radius:24px;position:relative;box-shadow:0 2px 20px rgba(0,0,0,.06)}
+.f .dot{position:absolute;left:70px;width:60px;height:60px;border-radius:50%;background:#ff3b30}
+.f .t{position:absolute;bottom:-62px;width:100%;text-align:center;font-size:36px;color:#6e6e73}
+</style>
+<h1>画面不是剪出来的，<br><span class="blue">是一帧一帧算出来的</span></h1>
+<div class="frames">
+ <div class="f"><div class="dot" style="top:260px"></div><div class="t">t = 0.0 秒</div></div>
+ <div class="f"><div class="dot" style="top:190px"></div><div class="t">t = 0.5 秒</div></div>
+ <div class="f"><div class="dot" style="top:120px"></div><div class="t">t = 1.0 秒</div></div>
+ <div class="f"><div class="dot" style="top:50px"></div><div class="t">t = 1.5 秒</div></div>
+</div>

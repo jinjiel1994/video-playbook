@@ -1,0 +1,30 @@
+# 渲染和中间产物
+frames/
+out/
+build/
+node_modules/
+timeline.json
+timeline.js
+# 大文件：片子、声音、模型、字体
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.npy
+*.otf
+*.ttf
+*.woff
+*.woff2
+*.safetensors
+*.pt
+*.pth
+*.onnx
+# 不进仓库的私密东西和本机设置
+local.env
+.env
+.env.*
+*.key
+*.pem
+.DS_Store

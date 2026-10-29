@@ -1,0 +1,8 @@
+【标题】
+一帧一帧
+
+【简介】
+video-playbook 的示例片：画面由网页画布逐帧算出，Chromium 无头截帧，ffmpeg 合成；声音全是代码合成。
+
+【资料】
+无外部素材。字体：Noto Sans CJK SC、Noto Serif CJK SC（SIL OFL）。
