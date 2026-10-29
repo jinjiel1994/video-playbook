@@ -36,5 +36,5 @@ for dp, _, fs in os.walk(d):
 print(json.dumps(film, ensure_ascii=False))
 PY
 print "建好了：${dir#$ROOT/}"
-print "开工前读：../方法/README.md、../规格/各规格.md。任务书先过选题门，再写 口播稿.md、分镜单.md、script.py、render.js。"
+print "开工前读：../原则.md、../方法/README.md、../规格/各规格.md。任务书先过选题门，再写 口播稿.md、分镜单.md、script.py、render.js。"
 print "先跑通：cd ${dir#$ROOT/} && python3 script.py sheet && ENGINE=est python3 script.py tts && ./make.sh check"

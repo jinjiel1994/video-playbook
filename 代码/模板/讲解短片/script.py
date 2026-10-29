@@ -10,7 +10,7 @@ LIB = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'lib'
 for _f in ('film.py', 'sound.py'):
     exec(compile(open(os.path.join(LIB, _f)).read(), os.path.join(LIB, _f), 'exec'))
 
-# 开头那句：前 5 秒要「奇」或者「有戏」，开口说世界、说别人，不指着观众数落（规格/抖音信息流.md「开头」）。要原样出现在稿子里
+# 开头那句：前 5 秒要「奇」或者「有戏」，开口说世界、说别人，不指着观众数落（规格/各规格.md「开头」）。要原样出现在稿子里
 HOOK = '这一句先写好'
 QUOTE = ''              # 题目来自一本书、一句名言的：那句话大家熟的说法（前 20 秒原样念出来）
 TRANS = {'dissolve': 1.6}

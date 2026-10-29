@@ -5,7 +5,7 @@
 // 系列有 样式.js 的，new.sh 已经让 index.html 先载入它。
 // 循环写 frac()，列表下标写 mod()：场景淡入时局部时间是负的，% 1 会出负数（./make.sh crash 会查）。
 
-const FADE_IN = 0;    // 推荐流里第一帧就是封面：开场就是完整画面加那句话（规格/平台.md）
+const FADE_IN = 0;    // 推荐流里第一帧就是封面：开场就是完整画面加那句话（规格/README.md）
 const K = {           // 一种颜色一个意思：先写下每种颜色代表什么
   bg0: '#0E1322', ink: '#F2F4F8', dim: '#8A93A8', edge: '#2A3350', panel: 'rgba(16,22,40,.86)', lav: '#B9A7F2',
   accent: '#7FD6C2',  // （例）青绿：这条片子的主干

@@ -124,7 +124,7 @@ step() {
               node $LIB/timecheck.mjs | tee build/qc_time.txt
               find build -maxdepth 1 -name 'qc_sheet_*' -delete
               node $LIB/capture.mjs stills $T > /dev/null && python3 $LIB/qcsheet.py build/qc_points.json
-              # for the 质感 question (审稿说明.md, E): four full-size frames, picked the way 大理's blind review picked them
+              # for the 质感 question (方法/两道审.md, E): four full-size frames, picked the way 大理's blind review picked them
               local P; P=$(python3 -c "import json; d = json.load(open('timeline.json'))['duration']; print(f'0,3,{d * .3:.1f},{d * .6:.1f}')")
               node $LIB/capture.mjs stills $P > /dev/null && print "质感：四张原尺寸静帧 build/still_<秒>.png（$P 秒：第一帧、第 3 秒、三成处、六成处）"
               python3 script.py loudness ${2:-} | tee build/qc_loudness.txt

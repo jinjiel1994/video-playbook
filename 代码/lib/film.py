@@ -117,7 +117,7 @@ LONG_OK = ''   # no longer needed (kept so old scripts still run)
 # '<reason, agreed by whoever signs off>' lets it come later.
 QUOTE = ''
 QUOTE_LATE_OK = ''
-# The opening line that answers 「我为什么要看」 (奇 or 有戏, see 规格/抖音信息流.md and 参考/开头钩子-GitHub仓库笔记.md). In the
+# The opening line that answers 「我为什么要看」 (奇 or 有戏, see 规格/各规格.md and 案例本/参考/开头钩子笔记.md). In the
 # feed's specs (FEED) `gate` will not voice a script without one, or one that is not said word for word, finished within the
 # first 5 seconds (掏钱 v2: a couple's story for 40 seconds; the business came in at 15 s, the question at 38 s, what you take
 # away at 62 s); other specs only get a warning. The first line is read without pauses, so this uses the speaking rate
@@ -685,7 +685,7 @@ def hook_line():
     """Where the opening line (HOOK) is finished, from the characters before and in it at the speaking rate; the second value
     is True when it is missing, not said word for word, or finished after 5 seconds."""
     if not HOOK:
-        return "没写 HOOK：script.py 里写上开头那句（规格/抖音信息流.md「开头」）。", True
+        return "没写 HOOK：script.py 里写上开头那句（规格/各规格.md「开头」）。", True
     norm = lambda x: ''.join(ch for ch in x if ch not in PUNCT and ch not in '|《》“”「」 ')
     q, done = norm(HOOK), 0
     for sc in SCENES:
@@ -748,9 +748,9 @@ def gate():
         print('不配音：视频文件夹里没有 口播稿.md。先像跟朋友一口气讲下来那样整段写，写完再对结构、切成句子（方法/稿子写给耳朵听.md）。')
         sys.exit(1)
     if not re.search(r'^听众审：\s*过', txt, re.M):
-        print('不配音：审稿.md 顶上没有「听众审：过」。先交给只拿稿子、不给背景的审稿人听一遍（审稿说明.md「听众审」）。')
+        print('不配音：审稿.md 顶上没有「听众审：过」。先交给只拿稿子、不给背景的审稿人听一遍（方法/两道审.md「听众审」）。')
         sys.exit(1)
-    # the opening gates stop the voicing only in the feed's specs (规格/抖音信息流.md); a documentary or a brand film is told
+    # the opening gates stop the voicing only in the feed's specs (规格/各规格.md); a documentary or a brand film is told
     hline, hbad = hook_line()
     if hbad and not HOOK_LATE_OK:
         if FEED:

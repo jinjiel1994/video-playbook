@@ -157,7 +157,7 @@ async function auditText(times, limit, step = 0) {
   const keep = step ? Infinity : 4;   // how many times a text finding lists
   // where the platform draws over the video on a phone (1080×1920): status bar, the like/comment column, the caption block.
   // One set per platform; a film checks against every platform in its 片子.json (Douyin when there is none). 视频号's own
-  // layout has not been measured yet: until a screenshot is, it is checked like Douyin's (规格/平台.md)
+  // layout has not been measured yet: until a screenshot is, it is checked like Douyin's (规格/README.md)
   const ZONES = {
     抖音: [[0, 0, 1080, 120, '顶部状态栏'], [960, 760, 1080, 1560, '右侧点赞评论栏'], [0, 1640, 1080, 1920, '底部文案区']],
     视频号: [[0, 0, 1080, 120, '顶部状态栏'], [960, 760, 1080, 1560, '右侧点赞评论栏'], [0, 1640, 1080, 1920, '底部文案区']],
